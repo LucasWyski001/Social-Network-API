@@ -1,5 +1,5 @@
 const { connect, connection } = require('mongoose');
 
-connect('mongodb://127.0.0.1:27017/postsTags');
+connect('mongodb+srv://root:WysoczanskiDenLuc01@cluster0.1hdcug7.mongodb.net/social-network');
 
 module.exports = connection;
