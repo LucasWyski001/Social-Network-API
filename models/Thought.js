@@ -1,25 +1,29 @@
 const { Schema, model } = require('mongoose');
-const reactionSchema = require('./reaction');
+const reactionSchema = require('./Reaction');
 const moment = require('moment');
-// Schema to create Post model
+
+// Schema to create Thought model
 const thoughtSchema = new Schema(
   {
-    published: {
-      type: Boolean,
-      default: false,
+    thoughtText: {
+      type: String,
+      required: true,
+      minLength: 1,
+      maxLength: 280,
     },
     createdAt: {
       type: Date,
       default: Date.now,
+      get: (timestamp) => moment(timestamp).format('MMM Do, YYYY [at] hh:mm a'),
     },
-    reaction: [reactionSchema],
-    text: {
+    username: {
       type: String,
-      minLength: 15,
-      maxLength: 500,
+      required: true,
     },
+    reactions: [reactionSchema],
   },
   {
+    // Here we are indicating that we want virtuals to be included with our response, overriding the default behavior
     toJSON: {
       virtuals: true,
     },
@@ -27,15 +31,15 @@ const thoughtSchema = new Schema(
   }
 );
 
-// Create a virtual property `tagCount` that gets the amount of comments per user
+// Create a virtual property `reactionCount` that gets the amount of reactions associated with a thought
 thoughtSchema
-  .virtual('tagCount')
+  .virtual('reactionCount')
   // Getter
   .get(function () {
-    return this.tags.length;
+    return this.reactions.length;
   });
 
-// Initialize our Post model
+// Initialize our Thought model
 const Thought = model('thought', thoughtSchema);
 
 module.exports = Thought;
