@@ -1,7 +1,8 @@
 const { Schema, model } = require('mongoose');
-
+const reactionSchema = require('./reaction');
+const moment = require('moment');
 // Schema to create Post model
-const postSchema = new Schema(
+const thoughtSchema = new Schema(
   {
     published: {
       type: Boolean,
@@ -11,12 +12,7 @@ const postSchema = new Schema(
       type: Date,
       default: Date.now,
     },
-    tags: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'tag',
-      },
-    ],
+    reaction: [reactionSchema],
     text: {
       type: String,
       minLength: 15,
@@ -32,7 +28,7 @@ const postSchema = new Schema(
 );
 
 // Create a virtual property `tagCount` that gets the amount of comments per user
-postSchema
+thoughtSchema
   .virtual('tagCount')
   // Getter
   .get(function () {
@@ -40,6 +36,6 @@ postSchema
   });
 
 // Initialize our Post model
-const Post = model('post', postSchema);
+const Thought = model('thought', thoughtSchema);
 
-module.exports = Post;
+module.exports = Thought;
